@@ -4,7 +4,7 @@ import Counter4 from './Counter4';
 function App() {
  
   return ( 
-    <Counter4 />
+
     
     </> 
   );
