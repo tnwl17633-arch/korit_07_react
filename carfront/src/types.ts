@@ -22,7 +22,12 @@ export type Car = {
   brand: string;
   model: string;
   color: string;
-  registractionNumber: string;
+  registrationNumber: string;
   modelYear: number;
   price: number;
+}
+
+export type CarEntity = {
+  car: Car;
+  url: string;
 }
