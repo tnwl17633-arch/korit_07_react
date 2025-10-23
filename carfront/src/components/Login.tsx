@@ -1,18 +1,20 @@
 import { useState, ChangeEvent} from "react";
 import axios from "axios";
-import { Button, TextField, Stack } from "@mui/material"
+import { Button, TextField, Stack, Snackbar } from "@mui/material";
+import Carlist from "./Carlist";
 
-type User = {
+type user = {
   username : string;
   password : string;
 }
 
 function Login() {
-  const [ user, setUser ] = useState<User>({
+  const [ user, setUser ] = useState<user>({
     username: '',
     password: ''
   });
   const [ isAuthenticated, setAuth ] = useState(false);
+  const [ open, setOpen ] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUser({ ...user, [event.target.name]: event.target.value});
@@ -28,7 +30,7 @@ function Login() {
     .then(res => {
       const jwtToken = res.headers.authorization;
       if(jwtToken !== null) {
-        sessionStorage.setItem("jwt", jwtToken);
+        sessionStorage.setItem("jwt", jwtToken);   // 지역변수의 경계를 넘어서 함수에서 사용하기 위해 
         setAuth(true);
       }
     })
@@ -37,28 +39,42 @@ function Login() {
     });
     }
 
-  return(
-  <Stack spaing={2} alignItems="center" mt={2}>
-    <TextField 
-      name="username"
-      label="Username"
-      onChange={handleChange}
-    />
-    <TextField
-     type="password"
-     name="password"
-     label="Password"
-     onChange={handleChange}
-    />
-    <Button
-      variant="outlined"
-      color="primary"
-      onClick={handleLogin}
-    >
-      Login
-    </Button>
-  </Stack>
-  );
+    if(isAuthenticated) {
+      return <Carlist />
+    }
+
+    else {
+      return(
+      <Stack spacing={2} alignItems="center" mt={2}>
+        <TextField 
+          name="username"
+          label="Username"
+          onChange={handleChange}
+        />
+        <TextField
+        type="password"
+        name="password"
+        label="Password"
+        onChange={handleChange}
+        />
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleLogin}
+        >
+          Login
+        </Button>
+        <Snackbar 
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+        message='ID 혹은 비밀번호가 틀렸습니다.'
+        
+        />
+
+      </Stack>
+      );
+    }
 }
 
 export default Login
